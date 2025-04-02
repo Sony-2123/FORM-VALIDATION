@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Validation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: blue;
+        }
+
+        span {
+            display: none;
+            font-size: 14px;
+        }
+
+        .button {
+            background-color: red;
+        }
+
+        input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+   <h1>
+      Enter the details to go to the next page
+   </h1>
+<form action="">
+    <input type="text" id="username" placeholder="User name">
+    <span id="usernameError">Please fill the user name</span>
+    <span id="usernameTaken">User name already taken</span>
+    
+    <input type="password" id="password" placeholder="Password">
+    <span id="passwordError">Please fill the Password</span>
+    
+    <input type="email" id="email" placeholder="Enter your email">
+    <span id="emailError">Enter a valid email</span>
+    
+    <input type="tel" id="phone" placeholder="Phone number">
+    <span id="phoneError">Enter a valid phone number</span>
+    
+    <button type="submit">SIGN IN</button>
+</form>
+
+   <script>
+      var form = document.querySelector("form");
+      var users = JSON.parse(localStorage.getItem("users")) || [];
+
+      form.addEventListener("submit", function(e){
+          e.preventDefault();
+          
+          var username = document.getElementById("username").value.trim();
+          var password = document.getElementById("password").value;
+          var email = document.getElementById("email").value.trim();
+          var phone = document.getElementById("phone").value.trim();
+          
+          var usernameError = document.getElementById("usernameError");
+          var usernameTaken = document.getElementById("usernameTaken");
+          var passwordError = document.getElementById("passwordError");
+          var emailError = document.getElementById("emailError");
+          var phoneError = document.getElementById("phoneError");
+
+          var isValid = true;
+          usernameError.style.display = "none";
+          usernameTaken.style.display = "none";
+          passwordError.style.display = "none";
+          emailError.style.display = "none";
+          phoneError.style.display = "none";
+
+          if(username === "") {
+              usernameError.style.display = "inline";
+              isValid = false;
+          }
+
+          if(users.some(user => user.username === username)) {
+              usernameTaken.style.display = "inline";
+              isValid = false;
+          }
+
+          if(password.length < 6) {
+              passwordError.textContent = "Password must be at least 6 characters long";
+              passwordError.style.display = "inline";
+              isValid = false;
+          }
+
+        
+
+          if(isValid) {
+              users.push({ username, password, email, phone });
+              localStorage.setItem("users", JSON.stringify(users));
+              alert("Registration successful!");
+              form.reset();
+              window.location.assign("sign.html");
+
+          }
+      });
+   </script>
+</body>
+</html>
